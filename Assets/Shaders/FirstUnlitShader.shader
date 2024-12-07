@@ -4,7 +4,7 @@ Shader "Unlit/FirstUnlitShader"
     Properties //this is input data excluding mesh or lighting information which unity automatically supplies
     {//this properties will show up in editor and you can change it from there
         //_MainTex ("Texture", 2D) = "white" {}
-        _Value ("Value", float) = 1.0
+        _Color ("Color", Color) = (1,1,1,1)
     }
     SubShader //This has stuff when it comes to sorting, tags like if this object is opaque or transparent, do we want to change the queue of this so that 
     //it run before or after another shader etc// So this more like render pipeline related info
@@ -32,7 +32,9 @@ Shader "Unlit/FirstUnlitShader"
             //float4 _MainTex_ST;
 
             //in order to use the property we have defined above in the properties of the shader, we need to also define it here as well
-            float _Value;
+            //float _Value;
+
+            float4 _Color;
             
             //This is automatically filled out by unity
             //struct appdata//you can also rename this to have more meaningful name like Mesh data
@@ -114,6 +116,7 @@ Shader "Unlit/FirstUnlitShader"
 
 
             //This is fragment shader part
+            //All this fragment shader part return is the color after all the calculation
             fixed4 frag (Interpolators i) : SV_Target //this semantic means that this fragment shader should output to the frame buffer so that should be the
             {//target of this fragment shader. if you are doing deffered rendering, you can write to multiple targets
                 // sample the texture
@@ -123,7 +126,8 @@ Shader "Unlit/FirstUnlitShader"
                 // return col;
                 
                 
-                return float4(1,0,0,1);//return red color
+                //return float4(1,0,0,1);//return red color
+                return _Color;
             }
             ENDCG
         }
