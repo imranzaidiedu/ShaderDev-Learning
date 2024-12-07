@@ -101,6 +101,16 @@ Shader "Unlit/FirstUnlitShader"
 
             //Note: Only use lower percision data types if you really know what you are doing and you are aware of its limitations across different platforms
             //and your requirements
+            //in float4, you can access the 4 values by x,y,z,w or r,g,b,a
+
+            //Swizzling
+            //You can save set of values from one data type to another small one. e.g
+            //float4 myValue;
+            //float2 otherValue = myValue.xy
+            //float2 otherValue = myValue.rg
+            //float2 otherValue = myValue.gr // this switching r with g is called swizzling
+            //float2 otherValue = myValue.xx
+            //float4 otherValue = myValue.xxxx 
 
 
             //This is fragment shader part
