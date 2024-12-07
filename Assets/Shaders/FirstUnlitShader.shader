@@ -50,9 +50,7 @@ Shader "Unlit/FirstUnlitShader"
                 //float4 color : COLOR; //this is to get the vertex color
                 //float4 tangents : TANGENT; //tangents are used with normals to provide more details to surface without adding geometry
                 //The first three values in tangent is the direction of the tangent and forth is to save that weather or not it's flipped or UV's are mirrored
-
                 //Normally we only take position and uvcoordinates when working on mesh data as we don't require other properties
-                
             };
 
             //struct v2f//this is unity's default name for the data that gets passed from the vertex shader to the fragment shader
