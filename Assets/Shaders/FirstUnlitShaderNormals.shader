@@ -56,7 +56,7 @@ Shader "Unlit/FirstUnlitShaderNormals"
                 //it can get really complicated when you do it on VR etc
                 o.normal = mul((float3x3)UNITY_MATRIX_M, v.normals);
 
-                //Note: the same calculation can be done in the fragment shader as well but as it's getting executed for every single pixel
+                //Note1: the same calculation can be done in the fragment shader as well but as it's getting executed for every single pixel
                 //every frame, and vertices are way less than that in our case, we should be doing it in vertex shader
                 
                 return o;
@@ -64,6 +64,9 @@ Shader "Unlit/FirstUnlitShaderNormals"
             
             fixed4 frag (Interpolators i) : SV_Target
             {
+                //return float4(UnityObjectToWorldNormal(i.normal), 1);
+                //^can do the same thing in fragment shader but should not in our case, look at Note1
+                
                 return float4(i.normal, 1);
             }
             ENDCG
