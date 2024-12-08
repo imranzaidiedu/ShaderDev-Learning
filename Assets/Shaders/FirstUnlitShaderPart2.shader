@@ -55,6 +55,9 @@ Shader "Unlit/FirstUnlitShaderPart2"
                 //But unity recommend devs to use Unity's provided methods to enable unity to define it different for different platforms because
                 //it can get really complicated when you do it on VR etc
                 o.normal = mul((float3x3)UNITY_MATRIX_M, v.normals);
+
+                //Note: the same calculation can be done in the fragment shader as well but as it's getting executed for every single pixel
+                //every frame, and vertices are way less than that in our case, we should be doing it in vertex shader
                 
                 return o;
             }
