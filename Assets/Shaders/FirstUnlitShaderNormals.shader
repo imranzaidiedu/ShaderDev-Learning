@@ -1,4 +1,4 @@
-Shader "Unlit/FirstUnlitShaderPart2"
+Shader "Unlit/FirstUnlitShaderNormals"
 {
     Properties
     {
