@@ -3,6 +3,7 @@ Shader "Unlit/FirstUnlitShaderUV"
     Properties
     {
         _Scale ("Scale", float) = 1
+        _Offset ("Offset", float) = 0
     }
     SubShader 
     {
@@ -18,6 +19,7 @@ Shader "Unlit/FirstUnlitShaderUV"
             #include "UnityCG.cginc" 
 
             float _Scale;
+            float _Offset;
             
             struct MeshData 
             {
@@ -38,7 +40,7 @@ Shader "Unlit/FirstUnlitShaderUV"
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
-                o.uv = v.uv * _Scale; //Passing through as it is
+                o.uv = (v.uv + _Offset) * _Scale; //Passing through as it is
                 return o;
             }
             
