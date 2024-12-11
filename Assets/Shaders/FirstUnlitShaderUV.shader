@@ -2,6 +2,7 @@ Shader "Unlit/FirstUnlitShaderUV"
 {
     Properties
     {
+        _Scale ("Scale", float) = 1
     }
     SubShader 
     {
@@ -15,6 +16,8 @@ Shader "Unlit/FirstUnlitShaderUV"
             #pragma fragment frag
             
             #include "UnityCG.cginc" 
+
+            float _Scale;
             
             struct MeshData 
             {
@@ -35,7 +38,7 @@ Shader "Unlit/FirstUnlitShaderUV"
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
-                o.uv = v.uv; //Passing through as it is
+                o.uv = v.uv * _Scale; //Passing through as it is
                 return o;
             }
             
