@@ -62,6 +62,11 @@ Shader "Unlit/FirstUnlitShaderTriangleWaves"
                 //This formula will give you a shape of a triangle which means the value will go from 1 to 0 to 1
                 //The method below is showing the triangle pattern
                 float t = abs(frac(i.uv.x * 5) * 2 -1);
+
+                //We can use trigonometry functions to achieve different results
+                //e.g
+                t = cos(i.uv.x * 25);
+                //^This is showing patterns with values going from -1 to 1
                 return t;
             }
             ENDCG
