@@ -64,6 +64,12 @@ Shader "Unlit/FirstUnlitShaderPatternManipulation"
                 xOffset = cos(i.uv.y * TAU * 8) * 0.01;
                 t = cos((i.uv.x + xOffset) * TAU * 5) * 0.5 + 0.5;
 
+                //_Time this is time variable provided by Unity, it's a global variable in shaders
+                //It has xyzw components. y = seconds, w = y/20
+                //Below we are animating the patter using the time
+                t = cos((i.uv.x + xOffset + _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                
+
                 return t;
             }
             ENDCG
