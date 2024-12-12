@@ -4,6 +4,9 @@ Shader "Unlit/FirstUnlitShaderGradient"
     {
         _ColorA("Color A", Color) = (0,0,0,1)
         _ColorB("Color B", Color) = (1,1,1,1)
+        _ColorStart("Color Start", Range(0, 1)) = 0
+        _ColorEnd("Color End", Range(0, 1)) = 1
+        //Range is just like we have in unity, a slider from first value to the second
     }
     SubShader 
     {
@@ -20,6 +23,9 @@ Shader "Unlit/FirstUnlitShaderGradient"
 
             float4 _ColorA;
             float4 _ColorB;
+
+            float _ColorStart;
+            float _ColorEnd;
             
             struct MeshData 
             {
@@ -43,10 +49,17 @@ Shader "Unlit/FirstUnlitShaderGradient"
                 o.uv = v.uv;
                 return o;
             }
+
+            //As inverse lerp is not provided by default, so we are writing our own
+            float InverseLerp(float startValue, float endValue, float inputValue)
+            {
+                return (inputValue - startValue)/(endValue-startValue);
+            }
             
             fixed4 frag (Interpolators i) : SV_Target
             {
-                float4 outColor = lerp(_ColorA, _ColorB, i.uv.x);
+                float t = InverseLerp(_ColorStart, _ColorEnd, i.uv.x);
+                float4 outColor = lerp(_ColorA, _ColorB, t);
                 return outColor;
             }
             ENDCG
