@@ -59,6 +59,11 @@ Shader "Unlit/FirstUnlitShaderPatternManipulation"
                 //with the offset above, it's adding the y value with x which is giving it an angle
                 //see the results in the editor
                 float t = cos((i.uv.x + xOffset) * TAU * 5) * 0.5 + 0.5;
+
+                //this will give us the wiggly lines pattern
+                xOffset = cos(i.uv.y * TAU * 8) * 0.01;
+                t = cos((i.uv.x + xOffset) * TAU * 5) * 0.5 + 0.5;
+
                 return t;
             }
             ENDCG
