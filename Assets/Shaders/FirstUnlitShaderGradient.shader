@@ -70,7 +70,8 @@ Shader "Unlit/FirstUnlitShaderGradient"
                 // e.f value = 1.34 => frac(value) => 0.34
                 //So frac removes the decimal part of a value and return the fractional part
                 t = frac(t);
-                //Now this will create repeating pattern and you can check in the scene 
+                //Now this will create repeating pattern and you can check in the scene
+                
                 
                 float4 outColor = lerp(_ColorA, _ColorB, t);
                 return outColor;
