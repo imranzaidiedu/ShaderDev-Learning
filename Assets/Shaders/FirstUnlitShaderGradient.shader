@@ -59,6 +59,19 @@ Shader "Unlit/FirstUnlitShaderGradient"
             fixed4 frag (Interpolators i) : SV_Target
             {
                 float t = InverseLerp(_ColorStart, _ColorEnd, i.uv.x);
+                
+                //At this stage, with some colors, you will see more than two colors
+                //This is happening because shader don't natively clamp between 0 and 1,
+                //so you need to do that whereever you want to keep a value within a range
+                //In out case, the InverseLerp has values ourside of 0 and 1
+
+                //For this, we use Frac function in shader which primarily substract floor value from the value
+                //frac = value - floor(value)
+                // e.f value = 1.34 => frac(value) => 0.34
+                //So frac removes the decimal part of a value and return the fractional part
+                t = frac(t);
+                //Now this will create repeating pattern and you can check in the scene 
+                
                 float4 outColor = lerp(_ColorA, _ColorB, t);
                 return outColor;
             }
