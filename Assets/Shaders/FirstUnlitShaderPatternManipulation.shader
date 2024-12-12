@@ -67,9 +67,12 @@ Shader "Unlit/FirstUnlitShaderPatternManipulation"
                 //_Time this is time variable provided by Unity, it's a global variable in shaders
                 //It has xyzw components. y = seconds, w = y/20
                 //Below we are animating the patter using the time
-                t = cos((i.uv.x + xOffset + _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                xOffset = cos(i.uv.x * TAU * 8) * 0.01;
+                t = cos((i.uv.y + xOffset - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                t *= 1 - i.uv.y;
+                //^Here we kind of made an effect of powering up around character
+                //Will add more details in next shader (Blending Modes)
                 
-
                 return t;
             }
             ENDCG
