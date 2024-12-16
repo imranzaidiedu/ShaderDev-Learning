@@ -39,6 +39,13 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             //Another thing, the draw will not be skipped when an object is excluded from depth buffer but the fragments will be discarded very early
             //even before your fragment shader executes, so fragment shader will not execute at all if the object is excluded from the depth buffer
             //To exclude it even from the draw, we use occlusion culling. Will cover that in a separate section.
+            //There are two things you can do in depth buffer, you can change the way that it read from the depth buffer and the way that it 
+            //writes to the depth buffer 
+            
+            //So if you have a lot of particles in a scene and it's covering a lot of pixels then it's going to be very heavy on GPU as it'd be
+            //doing a lot of processing but if it's a bit far away from the camera and covering a small amount of pixel then it will not cause
+            //much problem, that's why you have to be very careful in these kind of situations. This is called fill rates. You have to be careful
+            //to not have to high of the fill rates 
             
             CGPROGRAM
             
