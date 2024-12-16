@@ -123,7 +123,9 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
                 float t = cos((i.uv.y + xOffset - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
                 t *= 1 - i.uv.y;
                 
-                return t;
+                return t * (abs(i.normal.y) < 0.999);
+                //(* (abs(i.normal.y) < 0.999)) this part is just to remove the top and bottom of the cylinder to show
+                //the powerup effect
             }
             ENDCG
         }
