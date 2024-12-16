@@ -10,21 +10,25 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
     }
     SubShader 
     {
-        Tags { "RenderType"="Opaque" }
+        Tags
+        {
+            "RenderType"="Transparent"//This is for tagging purposes for post-processing effects 
+            "Queue" = "Transparent"//This is an actual order the things going to be render in
+        }
 
         Pass
         {
-            //Blending is normally calculated like below
-            //src*A + dst*B
-            //Or
-            //src*A + dst*B
-            //src is source and dst is destination
-
-            //Additive blending is just adding two colors. Let see how it will look like
-            //we set A = 1 and B = 1, and add src and dst, which will give us
-            //src*1 + dst*1 = src + dst
+            //////Back face culling://////
+            //This means the backface of the object on which this shader is applied will not be rendered. So Cull means reduction of somthing
+            //We can tell shader to cull front faces, back faces or both
+            //And by default, we see that backface is culled for objects and to turn that on/off for front/back faces, we use
+            //Cull Back
+            //Cull Front
+            //Cull Off
             
-            Blend One One //This means we are setting A = 1 and B = 1
+            Cull Off
+            
+            //////Depth Buffer://////
             //As soon as we start blending and making things transparent, we start seeing a problem of not
             //seeing the objects behind this object and you will see some sorting issues. This is happening because of depth buffer.
             //What is a depth buffer or Z buffer and how it works? Look on internet
@@ -45,7 +49,28 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             //So if you have a lot of particles in a scene and it's covering a lot of pixels then it's going to be very heavy on GPU as it'd be
             //doing a lot of processing but if it's a bit far away from the camera and covering a small amount of pixel then it will not cause
             //much problem, that's why you have to be very careful in these kind of situations. This is called fill rates. You have to be careful
-            //to not have to high of the fill rates 
+            //to not have to high of the fill rates
+            
+            
+            //////Render queue://////
+            //In Unity's built-in Render pipeline, there is an order in which different types of geometry is rendered
+            //1. Skybox, 2. Opaque/geometry, 3. Transparent (which groups all additive and transparent stuff),
+            //4. Overlays (like Lens flares etc) 
+            
+            ZWrite Off//We are turning off the depth buffer for this shader to be able to see it
+            
+            //Blending is normally calculated like below
+            //src*A + dst*B
+            //Or
+            //src*A + dst*B
+            //src is source and dst is destination
+
+            //Additive blending is just adding two colors. Let see how it will look like
+            //we set A = 1 and B = 1, and add src and dst, which will give us
+            //src*1 + dst*1 = src + dst
+            
+            Blend One One //This means we are setting A = 1 and B = 1
+            
             
             CGPROGRAM
             
