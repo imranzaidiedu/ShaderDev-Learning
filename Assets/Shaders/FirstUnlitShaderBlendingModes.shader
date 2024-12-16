@@ -36,7 +36,10 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             //fragments/pixels, the object behind that object or a covered part of the object gets excluded from the depth buffer.
             //So, when we use transparent objects in the scene, the depth buffer does not exclude any object that comes within the camera range
             //which results in high processing when using particles as they are mostly transparent.
-
+            //Another thing, the draw will not be skipped when an object is excluded from depth buffer but the fragments will be discarded very early
+            //even before your fragment shader executes, so fragment shader will not execute at all if the object is excluded from the depth buffer
+            //To exclude it even from the draw, we use occlusion culling. Will cover that in a separate section.
+            
             CGPROGRAM
             
             #pragma vertex vert
