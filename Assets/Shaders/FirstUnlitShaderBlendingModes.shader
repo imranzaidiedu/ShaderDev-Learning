@@ -72,6 +72,13 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             
             Blend One One //This means we are setting A = 1 and B = 1
             
+            //Multiplicative blending
+            //For this, we will be multiplying source with destination
+            //To achieve that, we need to set A = dst and B = 0, which will give us
+            //src*dst + 0 which is multiplying the src and dst
+            
+            //Blend DstColor Zero //This means we are setting A = DstColor(Destination color) and B = 0
+            
             CGPROGRAM
             
             #pragma vertex vert
@@ -112,7 +119,7 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
 
             fixed4 frag (Interpolators i) : SV_Target
             {
-                float xOffset = i.uv.y;
+                float xOffset = cos(i.uv.y * TAU * 8) * 0.01;
                 float t = cos((i.uv.y + xOffset - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
                 t *= 1 - i.uv.y;
                 
