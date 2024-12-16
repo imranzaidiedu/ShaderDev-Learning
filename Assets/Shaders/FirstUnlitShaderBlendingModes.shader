@@ -14,6 +14,7 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
         {
             "RenderType"="Transparent"//This is for tagging purposes for post-processing effects 
             "Queue" = "Transparent"//This is an actual order the things going to be render in
+            //^So changing this will change the render order of this object
         }
 
         Pass
@@ -70,7 +71,6 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             //src*1 + dst*1 = src + dst
             
             Blend One One //This means we are setting A = 1 and B = 1
-            
             
             CGPROGRAM
             
