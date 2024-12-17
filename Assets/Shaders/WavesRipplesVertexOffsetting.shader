@@ -63,8 +63,7 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
             {
                 Interpolators o;
 
-                //float wave = cos((v.uv0.y - _Time.y * 0.1) * TAU * 1);
-                v.vertex.y = GetWave(v.uv0 );
+                v.vertex.y = GetWave(v.uv0 ) * _WaveAmplitude;
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
