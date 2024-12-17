@@ -49,12 +49,22 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
                 float2 uv : TEXCOORD1;
             };
 
+            float GetWave(float2 uv)
+            {
+                float2 uvCentered = uv * 2 - 1;
+                float radialDistance = length(uvCentered);
+                
+                float wave = cos((radialDistance - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                wave *= 1 - radialDistance;
+                return wave;
+            }
+
             Interpolators vert (MeshData v)
             {
                 Interpolators o;
 
                 //float wave = cos((v.uv0.y - _Time.y * 0.1) * TAU * 1);
-                // v.vertex.y = wave * _WaveAmplitude;
+                v.vertex.y = GetWave(v.uv0 );
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
@@ -64,12 +74,7 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
 
             fixed4 frag (Interpolators i) : SV_Target
             {   
-                float2 uvCentered = i.uv * 2 - 1;
-                float radialDistance = length(uvCentered);
-                
-                float wave = cos((radialDistance - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
-                wave *= 1 - radialDistance;
-                return wave;
+                return GetWave(i.uv);
             }
             ENDCG
         }
