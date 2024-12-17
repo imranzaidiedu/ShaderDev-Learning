@@ -60,6 +60,24 @@ Shader "Unlit/FirstUnlitShaderBlendingModes"
             
             ZWrite Off//We are turning off the depth buffer for this shader to be able to see it
             
+            
+            //////ZTest//////
+            //There are other things that you can do with the depth buffer
+            //As we have turned off to write to the depth buffer by turning it off above (ZWrite Off) but it still reads from
+            //the depth buffer, so when this object goes behind an opaque model, that part disappears but sometimes you want
+            //to show that even if that is behind an opaque object. To achieve this, we use ZTest which is set to LEqual by
+            //default which means less than and equal to. 
+            //ZTest means that how testing should work out when you are presented with depth buffer with some value when reading
+            
+            //ZTest LEqual (default) which means that if the depth of this object is less than or equal to the depth already written 
+            //into the depth buffer then show it otherwise don't
+            
+            //ZTest Always//This will show this object even if it's behind an opaque object means it doesn't care of the depth buffer
+            
+            //ZTest GEqual//This will show the object only if it's behind of something, not in front of something. An example of it's
+            //use is when we want to show a character behind something like an outline of it, we use this
+            
+            //////Blending Modes//////
             //Blending is normally calculated like below
             //src*A + dst*B
             //Or
