@@ -53,8 +53,8 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
             {
                 Interpolators o;
 
-                float wave = cos((v.uv0.y - _Time.y * 0.1) * TAU * 1);
-                v.vertex.y = wave * _WaveAmplitude;
+                //float wave = cos((v.uv0.y - _Time.y * 0.1) * TAU * 1);
+                // v.vertex.y = wave * _WaveAmplitude;
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
@@ -63,9 +63,14 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
             }
 
             fixed4 frag (Interpolators i) : SV_Target
-            {
-                float wave = cos((i.uv.y - _Time.y * 0.1) * TAU * 1) * 0.5 + 0.5;
-                return wave;
+            {   
+                float2 uvCentered = i.uv * 2 - 1;
+                float radialDistance = length(uvCentered);
+
+                return float4(radialDistance.xxx, 1); 
+                
+                //float wave = cos((i.uv.y - _Time.y * 0.1) * TAU * 1) * 0.5 + 0.5;
+                //return wave;
             }
             ENDCG
         }
