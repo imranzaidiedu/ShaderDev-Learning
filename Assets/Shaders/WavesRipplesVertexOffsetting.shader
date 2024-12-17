@@ -68,6 +68,7 @@ Shader "Unlit/WavesRipplesVertexOffsetting"
                 float radialDistance = length(uvCentered);
                 
                 float wave = cos((radialDistance - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                wave *= 1 - radialDistance;
                 return wave;
             }
             ENDCG
