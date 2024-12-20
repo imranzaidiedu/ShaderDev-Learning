@@ -66,8 +66,12 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
 
             float4 frag (Interpolators i) : SV_Target
             {
+                float2 topDownProjection = i.worldPos.xz;
+                
                 //this is showing colors according to the world space
-                return float4(i.worldPos.xyz,1);
+                //return float4(i.worldPos.xyz,1);
+
+                return float4(topDownProjection, 0,1);
             }
             ENDCG
         }
