@@ -42,7 +42,7 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
                 
                 //o.worldPos = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1));
                 //unity_ObjectToWorld is equals to UNITY_MATRIX_M
-                o.worldPos = mul(UNITY_MATRIX_M, float4(v.vertex.xyz, 1));
+            //1://o.worldPos = mul(UNITY_MATRIX_M, float4(v.vertex.xyz, 1));////Object to world
                 //^we are transforming this to local space to world space by multiplying it
                 //to model matrix
                 //When you do some matric multiplication where you transform some three dimension
@@ -55,7 +55,9 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
                 
                 //We use mul() because it has the advantage that we flip the arguments to transpose
                 //the matrix
-                
+
+                o.worldPos = mul(UNITY_MATRIX_M, v.vertex);//Object to world
+                //^removed casting from 1: as it's working fine like this as well
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
