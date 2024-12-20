@@ -5,6 +5,9 @@ Shader "Unlit/FirstUnlitShaderTextures"
         _MainTex ("Texture", 2D) = "white" {}
         //^This is how we setup a texture property. This is set to 2D which means the supplied texture will be a
         //2D texture. There are also 3D textures and there are cube maps but we are only work with 2D texture for now
+        //The "white" is assigned when there is nothing assigned to it. You can assign white, black, gray and bump
+        //this is basically a flat normal map color. So, white is a normal map that is directly pointing upwards
+        
         //_MainTex is a default name for Unity's texture property, usually that contains the color information on
         //the surface
     }
