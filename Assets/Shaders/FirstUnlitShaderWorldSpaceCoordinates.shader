@@ -71,7 +71,10 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
                 //this is showing colors according to the world space
                 //return float4(i.worldPos.xyz,1);
 
-                return float4(topDownProjection, 0,1);
+                //return float4(topDownProjection, 0,1);
+
+                float4 col = tex2D(_MainTex, topDownProjection);
+                return col;
             }
             ENDCG
         }
