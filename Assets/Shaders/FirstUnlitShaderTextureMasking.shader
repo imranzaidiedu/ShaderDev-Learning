@@ -51,23 +51,24 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
                 return o;
             }
 
-            float GetWave(float coord)
-            {
-                float wave = cos((coord - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
-                wave *= coord;
-                return wave;
-            }
-
             float4 frag (Interpolators i) : SV_Target
             {
                 float2 topDownProjection = i.worldPos.xz;
                 float4 moss = tex2D(_MainTex, topDownProjection);
                 
-                float pattern = tex2D(_Pattern, i.uv);
+                float pattern = tex2D(_Pattern, i.uv).x;
 
-                return GetWave(pattern);
+                //to have grass where ever this pattern is white
+                //we do following code
 
-                return pattern;
+                float4 finalColor = lerp(float4(1,0,0,1), moss, pattern);
+                //it's a blend between red and moss/grass/the pattern we have supplied
+
+                //So these are sampled in different spaces. Moss is on world space
+                //and pattern is on uv space, so if we move the object, the pattern
+                //moved with it but the main texture stays where it is
+
+                return finalColor;
             }
             ENDCG
         }
