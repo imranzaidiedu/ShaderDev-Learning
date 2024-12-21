@@ -23,7 +23,8 @@ Shader "Unlit/FirstUnlitShaderMipmaps"
     //There are a lot of stuff that you can add on top of this. The very basic type of mips are the side to side that I explained above is purely
     //distance based, it doesn't really care about angle, it does to some extent but it's isotropic. You can enable anisotropic which stores squished
     //version as well that are squished on some axis, means they are scaled on a specific axis which is useful when you are viewing something from a
-    //very low angle. This is what anisotropic filtering is.
+    //very low angle. This is what anisotropic filtering is. Anisotropic generally takes more memory. 
+    
     //^ a bit about Isotropic and Anisotropic filtering
     
     Properties
