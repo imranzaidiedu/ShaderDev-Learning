@@ -32,6 +32,7 @@ Shader "Unlit/FirstUnlitShaderMipmaps"
         _MainTex ("Texture", 2D) = "white" {}
         _Rock ("Rock", 2D) = "white" {}
         _Pattern ("Pattern", 2D) = "white" {}
+        _MipSampleLevel("MIP", Float) = 0
     }
     SubShader
     {
@@ -62,6 +63,7 @@ Shader "Unlit/FirstUnlitShaderMipmaps"
             sampler2D _MainTex;
             sampler2D _Rock;
             sampler2D _Pattern;
+            float _MipSampleLevel;
 
             Interpolators vert (MeshData v)
             {
@@ -76,7 +78,8 @@ Shader "Unlit/FirstUnlitShaderMipmaps"
             float4 frag (Interpolators i) : SV_Target
             {
                 float2 topDownProjection = i.worldPos.xz;
-                float4 moss = tex2D(_MainTex, topDownProjection);
+                //float4 moss = tex2D(_MainTex, topDownProjection);
+                float4 moss = tex2Dlod(_MainTex, float4(topDownProjection, _MipSampleLevel.xx));
                 float4 rock = tex2D(_Rock, topDownProjection);
                 
                 float pattern = tex2D(_Pattern, i.uv).x;
