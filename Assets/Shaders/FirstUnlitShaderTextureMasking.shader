@@ -3,6 +3,7 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Rock ("Rock", 2D) = "white" {}
         _Pattern ("Pattern", 2D) = "white" {}
         
         //Random Question
@@ -39,6 +40,7 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
             };
 
             sampler2D _MainTex;
+            sampler2D _Rock;
             sampler2D _Pattern;
 
             Interpolators vert (MeshData v)
@@ -55,6 +57,7 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
             {
                 float2 topDownProjection = i.worldPos.xz;
                 float4 moss = tex2D(_MainTex, topDownProjection);
+                float4 rock = tex2D(_Rock, topDownProjection);
                 
                 float pattern = tex2D(_Pattern, i.uv).x;
 
@@ -67,6 +70,10 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
                 //So these are sampled in different spaces. Moss is on world space
                 //and pattern is on uv space, so if we move the object, the pattern
                 //moved with it but the main texture stays where it is
+
+                //Blend between rock and moss
+                finalColor = lerp(rock, moss, pattern);
+                //both moss and rock are in world space and pattern is in uv space
 
                 return finalColor;
             }
