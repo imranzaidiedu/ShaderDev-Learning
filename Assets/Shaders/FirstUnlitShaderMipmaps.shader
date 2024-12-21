@@ -79,7 +79,10 @@ Shader "Unlit/FirstUnlitShaderMipmaps"
             {
                 float2 topDownProjection = i.worldPos.xz;
                 //float4 moss = tex2D(_MainTex, topDownProjection);
+                
                 float4 moss = tex2Dlod(_MainTex, float4(topDownProjection, _MipSampleLevel.xx));
+                //^The tex2D cannot be used in the vertex shader but this tex2Dlod can be used in the vertex shader
+                
                 float4 rock = tex2D(_Rock, topDownProjection);
                 
                 float pattern = tex2D(_Pattern, i.uv).x;
