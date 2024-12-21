@@ -7,6 +7,8 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
         //2D texture. There are also 3D textures and there are cube maps but we are only work with 2D texture for now
         //_MainTex is a default name for Unity's texture property, usually that contains the color information on
         //the surface
+        
+        _Pattern ("Pattern", 2D) = "white" {}
     }
     SubShader
     {
@@ -34,7 +36,8 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            sampler2D _Pattern;
+            //float4 _MainTex_ST;
 
             Interpolators vert (MeshData v)
             {
@@ -57,10 +60,10 @@ Shader "Unlit/FirstUnlitShaderWorldSpaceCoordinates"
                 //the matrix
 
                 o.worldPos = mul(UNITY_MATRIX_M, v.vertex);//Object to world
-                //^removed casting from 1: as it's working fine like this as well
+                //^removed casting from (1:) as it's working fine like this as well
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                //o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
