@@ -23,6 +23,7 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #define TAU 6.28318530718
 
             struct MeshData
             {
@@ -50,12 +51,21 @@ Shader "Unlit/FirstUnlitShaderTextureMasking"
                 return o;
             }
 
+            float GetWave(float coord)
+            {
+                float wave = cos((coord - _Time.y * 0.1) * TAU * 5) * 0.5 + 0.5;
+                wave *= coord;
+                return wave;
+            }
+
             float4 frag (Interpolators i) : SV_Target
             {
                 float2 topDownProjection = i.worldPos.xz;
                 float4 moss = tex2D(_MainTex, topDownProjection);
                 
                 float pattern = tex2D(_Pattern, i.uv);
+
+                return GetWave(pattern);
 
                 return pattern;
             }
