@@ -14,7 +14,7 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
 
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
+            //Blend SrcAlpha OneMinusSrcAlpha
             
             CGPROGRAM
             #pragma vertex vert
@@ -64,8 +64,10 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
 
                 if (i.uv.x > _FillAmount)
                 {
-                    gradient = 0;
+                    gradient = -1;
                 }
+
+                clip(gradient);
                 
                 return gradient;
             }
