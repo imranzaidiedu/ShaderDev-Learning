@@ -11,10 +11,11 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        LOD 100
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -38,6 +39,7 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
             float _FillAmount;
             float _StartingMargin;
             float _EndingMargin;
+            bool _IsBending;
 
             v2f vert (appdata v)
             {
