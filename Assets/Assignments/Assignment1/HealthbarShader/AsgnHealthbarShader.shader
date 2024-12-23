@@ -5,6 +5,8 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
         _StartColor("StartColor", Color) = (1,0,0,1)
         _EndColor("EndColor", Color) = (0,1,0,1)
         _FillAmount ("FillAmount", Range(0, 1)) = 1
+        _StartingMargin ("StartingMargin", Range(0, 1)) = 0.2
+        _EndingMargin ("EndingMargin", Range(0, 1)) = 0.8
     }
     SubShader
     {
@@ -34,6 +36,8 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
             float4 _StartColor;
             float4 _EndColor;
             float _FillAmount;
+            float _StartingMargin;
+            float _EndingMargin;
 
             v2f vert (appdata v)
             {
@@ -46,10 +50,21 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 float4 gradient = lerp(_StartColor, _EndColor, _FillAmount);
+                
+                if(_FillAmount < _StartingMargin)
+                {
+                    gradient = _StartColor;
+                }
+                else if (_FillAmount > _EndingMargin)
+                {
+                    gradient = _EndColor;
+                }
+
                 if (i.uv.x > _FillAmount)
                 {
                     gradient = 0;
                 }
+                
                 return gradient;
             }
             ENDCG
