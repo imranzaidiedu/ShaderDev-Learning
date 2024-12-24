@@ -7,6 +7,7 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
         _FillAmount ("FillAmount", Range(0, 1)) = 1
         _StartingMargin ("StartingMargin", Range(0, 1)) = 0.2
         _EndingMargin ("EndingMargin", Range(0, 1)) = 0.8
+        _HealthBarTex ("HealthbarTexture", 2D) = "white" {}
     }
     SubShader
     {
@@ -41,6 +42,8 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
             float _EndingMargin;
             bool _IsBending;
 
+            sampler2D _HealthBarTex;
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -51,25 +54,16 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float4 gradient = lerp(_StartColor, _EndColor, _FillAmount);
-                
-                if(_FillAmount < _StartingMargin)
-                {
-                    gradient = _StartColor;
-                }
-                else if (_FillAmount > _EndingMargin)
-                {
-                    gradient = _EndColor;
-                }
+                float2 sampleUV = float2(_FillAmount, i.uv.y);
+                fixed4 col = tex2D(_HealthBarTex, sampleUV);
 
                 if (i.uv.x > _FillAmount)
                 {
-                    gradient = -1;
+                    col = -1;
                 }
 
-                clip(gradient);
-                
-                return gradient;
+                clip(col);
+                return col;
             }
             ENDCG
         }
