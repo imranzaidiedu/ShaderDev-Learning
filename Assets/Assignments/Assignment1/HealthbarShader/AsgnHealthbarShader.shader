@@ -7,7 +7,14 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
         _FillAmount ("FillAmount", Range(0, 1)) = 1
         _StartingMargin ("StartingMargin", Range(0, 1)) = 0.2
         _EndingMargin ("EndingMargin", Range(0, 1)) = 0.8
-        _HealthBarTex ("HealthbarTexture", 2D) = "white" {}
+        _HealthBarTex ("HealthBarTexture", 2D) = "white" {}
+        
+        
+        _ShineColor ("Shine Color", Color) = (1,1,1,1)
+        _ShineIntensity ("Shine Intensity", Range(0,5)) = 1.0
+        _ShineWidth ("Shine Width", Range(0,10)) = 3.0
+        _ShineThreshold ("ShineThreshold", Range(0,1)) = 0.2
+        _Speed ("Shine Speed", Range(0,10)) = 1.0
     }
     SubShader
     {
@@ -37,10 +44,14 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
 
             float4 _StartColor;
             float4 _EndColor;
+            float4 _ShineColor;
             float _FillAmount;
             float _StartingMargin;
             float _EndingMargin;
-            bool _IsBending;
+            float _ShineIntensity;
+            float _ShineWidth;
+            float _Speed;
+            float _ShineThreshold;
 
             sampler2D _HealthBarTex;
 
@@ -52,11 +63,26 @@ Shader "Unlit/Assignments/AsgnHealthbarShader"
                 return o;
             }
 
+            float InverseLerp(float from, float to, float value)
+            {
+                return (value - from)/(to - from);
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 sampleUV = float2(_FillAmount, i.uv.y);
-                fixed4 col = tex2D(_HealthBarTex, sampleUV);
+                float4 col = tex2D(_HealthBarTex, sampleUV);
 
+                if (_FillAmount < _ShineThreshold)
+                {
+                    float shineCenter = frac(_Time.y * _Speed);//setting the shine's center/starting position and keeping just the franctional part according to time by speed
+                    float dist = abs(i.uv.x - shineCenter);//spreading shine ob both sides
+                    float shineFactor = 1.0 - dist * _ShineWidth;//setting width of the shine
+                    shineFactor = saturate(shineFactor);//Clamping the shine within 0 and 1
+                    float4 shine = shineFactor * _ShineIntensity * _ShineColor;//multiplying shine by color
+                    col.rgb += shine.rgb;//adding shine to the main color
+                }
+                
                 if (i.uv.x > _FillAmount)
                 {
                     col = -1;
