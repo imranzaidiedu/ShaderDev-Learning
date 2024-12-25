@@ -54,11 +54,21 @@ Shader "Unlit/AsgnHealthBarSol"
             {
                 float healthBarMask = _Health > i.uv.x;
 
-                float tHealthColor = saturate(InverseLerp(0.2, 0.8, _Health));//1b
-                float3 healthBarColor = lerp(float3(1,0,0), float3(0,1,0), tHealthColor);
-                float3 bgColor = float3(0,0,0);
-                float3 outColor = lerp(bgColor, healthBarColor, healthBarMask);
-                return float4(outColor, 1);
+                //float tHealthColor = saturate(InverseLerp(0.2, 0.8, _Health));//1b
+                //float3 healthBarColor = lerp(float3(1,0,0), float3(0,1,0), tHealthColor);
+                //float3 bgColor = float3(0,0,0);
+                //float3 outColor = lerp(bgColor, healthBarColor, healthBarMask);
+                //return float4(outColor, 1);
+                
+                float3 healthBarColor = tex2D(_MainTex, float2(_Health, i.uv.y));
+
+                if (_Health < 0.2)
+                {
+                    float flash = cos(_Time.y * 4) * 0.4 + 1;
+                    healthBarColor *= flash;
+                }
+                
+                return float4(healthBarColor * healthBarMask, 1);
             }
             ENDCG
         }
