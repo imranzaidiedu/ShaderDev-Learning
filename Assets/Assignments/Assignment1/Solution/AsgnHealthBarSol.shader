@@ -61,8 +61,10 @@ Shader "Unlit/AsgnHealthBarSol"
                 float sdf = distance(coords, pointOnLineSeg) * 2 - 1;
 
                 clip(-sdf);
-                
-                //return float4(sdf.xxx, 1);
+
+                float borderSDF = sdf + 0.1;
+                float pd = fwidth(borderSDF); //Screen space partial derivative
+                float borderMask = 1-saturate(borderSDF/pd);
                 
                 float healthBarMask = _Health > i.uv.x;
 
@@ -80,7 +82,7 @@ Shader "Unlit/AsgnHealthBarSol"
                     float flash = cos(_Time.y * 4) * 0.4 + 1;
                     healthBarColor *= flash;
                 }
-                return float4(healthBarColor * healthBarMask, 1);
+                return float4(healthBarColor * healthBarMask * borderMask, 1);
                 
             }
             ENDCG
