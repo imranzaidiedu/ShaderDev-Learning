@@ -2,6 +2,7 @@ Shader "Unlit/AsgnHealthBarSol"
 {
     Properties
     {
+        _MainTex ("Texture", 2D) = "white" {}
         _Health ("Health", Range(0, 1)) = 0
     }
     SubShader
@@ -10,7 +11,10 @@ Shader "Unlit/AsgnHealthBarSol"
         LOD 100
 
         Pass
-        {   
+        {
+            ZWrite Off
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -50,12 +54,11 @@ Shader "Unlit/AsgnHealthBarSol"
             {
                 float healthBarMask = _Health > i.uv.x;
 
-                float tHealthColor = saturate(InverseLerp(0.2, 0.8, _Health));
+                float tHealthColor = saturate(InverseLerp(0.2, 0.8, _Health));//1b
                 float3 healthBarColor = lerp(float3(1,0,0), float3(0,1,0), tHealthColor);
                 float3 bgColor = float3(0,0,0);
                 float3 outColor = lerp(bgColor, healthBarColor, healthBarMask);
                 return float4(outColor, 1);
-                
             }
             ENDCG
         }
