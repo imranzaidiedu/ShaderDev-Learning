@@ -5,7 +5,7 @@ Shader "Unlit/Lighting"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Gloss("Gloss", Float) = 1
+        _Gloss("Gloss", Range(0, 1)) = 1
     }
     SubShader
     {
@@ -82,9 +82,11 @@ Shader "Unlit/Lighting"
                 float3 H = normalize(L + V);
                 
                 float3 specularLight = saturate(dot(H, N)) * (lambert > 0);//uses for Blinn-Phong
-                specularLight = pow(specularLight, _Gloss); //Speculat exponent
+
+                float specularExponent = exp2(_Gloss * 6) + 2;
+                specularLight = pow(specularLight, specularExponent); //Speculat exponent
                 
-                return float4(specularLight * diffusionLight, 1);
+                return float4(specularLight.xxx, 1);
             }
             ENDCG
         }
