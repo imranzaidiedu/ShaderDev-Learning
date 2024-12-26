@@ -5,6 +5,7 @@ Shader "Unlit/Lighting"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Gloss("Gloss", Float) = 1
     }
     SubShader
     {
@@ -35,10 +36,12 @@ Shader "Unlit/Lighting"
                 float2 uv : TEXCOORD0;
                 float3 normal : TEXCOORD1;
                 float4 vertex : SV_POSITION;
+                float3 wPos : TEXCOORD2;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float _Gloss;
 
             Interpolators vert (MeshData v)
             {
@@ -46,13 +49,13 @@ Shader "Unlit/Lighting"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
-                
+                o.wPos = mul(unity_ObjectToWorld, v.vertex);//getting the position of the fragment
                 return o;
             }
 
             fixed4 frag (Interpolators i) : SV_Target
             {
-                float3 N = i.normal;
+                float3 N = normalize(i.normal);
 
                 //_WorldSpaceLightPos0
                 //According to this documentation https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
@@ -69,13 +72,17 @@ Shader "Unlit/Lighting"
                 float3 L = _WorldSpaceLightPos0.xyz; //A directional light
 
                 float3 diffusionLight = saturate(dot(N,L)) * _LightColor0.xyz;
-                //^this is basic lambert-ian shading/lighting
+                //^this is basic lambert-ian shading/lighting or diffuse lighting
                 //For lighting color, we don't need to add intensity as the intensity is encoded into the color itself
+
+                //specular lighting: Phong
+                float3 V = normalize(_WorldSpaceCameraPos - i.wPos); //view light
+                float3 R = reflect(-L, N);//reflection light
+
+                float3 specularLight = saturate(dot(V, R));
+                specularLight = pow(specularLight, _Gloss); //Speculat exponent
                 
-                return float4(diffusionLight, 1);
-                
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
+                return float4(specularLight * diffusionLight, 1);
             }
             ENDCG
         }
