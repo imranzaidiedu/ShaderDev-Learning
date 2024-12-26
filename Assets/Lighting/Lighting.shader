@@ -78,10 +78,10 @@ Shader "Unlit/Lighting"
 
                 //specular lighting: Phong
                 float3 V = normalize(_WorldSpaceCameraPos - i.wPos); //view light
-                //float3 R = reflect(-L, N);//reflection light
-                float3 H = normalize(L + V);//Blinn-Phong
+                //float3 R = reflect(-L, N);//usses for Phong
+                float3 H = normalize(L + V);
                 
-                float3 specularLight = saturate(dot(H, N)) * (lambert > 0);
+                float3 specularLight = saturate(dot(H, N)) * (lambert > 0);//uses for Blinn-Phong
                 specularLight = pow(specularLight, _Gloss); //Speculat exponent
                 
                 return float4(specularLight * diffusionLight, 1);
