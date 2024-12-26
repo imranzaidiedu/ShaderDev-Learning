@@ -68,7 +68,7 @@ Shader "Unlit/Lighting"
 
                 float3 L = _WorldSpaceLightPos0.xyz; //A directional light
 
-                float diffusionLight = dot(N,L);
+                float diffusionLight = saturate(dot(N,L));
                 //^this is basic lambert-ian shading/lighting
                 
                 return float4(diffusionLight.xxx, 1);
