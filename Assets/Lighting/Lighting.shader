@@ -6,6 +6,7 @@ Shader "Unlit/Lighting"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Gloss("Gloss", Range(0, 1)) = 1
+        _Color("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -42,6 +43,7 @@ Shader "Unlit/Lighting"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _Gloss;
+            float4 _Color;
 
             Interpolators vert (MeshData v)
             {
@@ -83,10 +85,11 @@ Shader "Unlit/Lighting"
                 
                 float3 specularLight = saturate(dot(H, N)) * (lambert > 0);//uses for Blinn-Phong
 
-                float specularExponent = exp2(_Gloss * 6) + 2;
+                float specularExponent = exp2(_Gloss * 11) + 2;
                 specularLight = pow(specularLight, specularExponent); //Speculat exponent
+                specularLight *= _LightColor0.xyz;
                 
-                return float4(specularLight.xxx, 1);
+                return float4(diffusionLight * _Color + specularLight, 1);
             }
             ENDCG
         }
