@@ -17,6 +17,11 @@ Shader "Unlit/Lighting"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            
+            #include "Lighting.cginc"
+            #include "AutoLight.cginc"
+            //^These are built-in unity code snippets to access unity specific data
+            //such as light position which unity populates automaticall
 
             struct MeshData
             {
@@ -40,14 +45,31 @@ Shader "Unlit/Lighting"
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.normal = v.normals;
+                o.normal = UnityObjectToWorldNormal(v.normals);
                 
                 return o;
             }
 
             fixed4 frag (Interpolators i) : SV_Target
             {
-                return float4(i.normal, 1);
+                float3 N = i.normal;
+
+                //_WorldSpaceLightPos0
+                //According to this documentation https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
+                //This light is infinetely far away and that's why it only provides us the direction of it
+                //Which means that the w component in this float4 is going to be 0 and for other lights
+                //the w component is going to be 1 which means you are getting the actual position and not the direction
+
+                //NOTE: The way that unity works that this pass main pass, the base pass or the pass that this comment is written is
+                //always going to be the directional light. You cannot have point light in the base pass
+                //Technically, if you want to do it properly, for every additional light, you should be doing it in
+                //additional pass for each additional light and those can be either directional lights or point lights
+                //So techically, _WorldSpaceLightPos0 is a directional light in this pass
+
+                float3 L = _WorldSpaceLightPos0.xyz;
+                
+                
+                return float4(L, 1);
                 
                 fixed4 col = tex2D(_MainTex, i.uv);
                 return col;
