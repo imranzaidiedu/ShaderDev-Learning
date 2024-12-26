@@ -66,10 +66,12 @@ Shader "Unlit/Lighting"
                 //additional pass for each additional light and those can be either directional lights or point lights
                 //So techically, _WorldSpaceLightPos0 is a directional light in this pass
 
-                float3 L = _WorldSpaceLightPos0.xyz;
+                float3 L = _WorldSpaceLightPos0.xyz; //A directional light
+
+                float diffusionLight = dot(N,L);
+                //^this is basic lambert-ian shading/lighting
                 
-                
-                return float4(L, 1);
+                return float4(diffusionLight.xxx, 1);
                 
                 fixed4 col = tex2D(_MainTex, i.uv);
                 return col;
