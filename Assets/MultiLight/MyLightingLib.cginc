@@ -1,10 +1,4 @@
-float InverseLerp(float a, float b, float v)
-{
-    return (v-a)/(b-a);
-}
-
 #include "UnityCG.cginc"
-            
 #include "Lighting.cginc"
 #include "AutoLight.cginc"
 
@@ -21,6 +15,8 @@ struct Interpolators
     float3 normal : TEXCOORD1;
     float4 vertex : SV_POSITION;
     float3 wPos : TEXCOORD2;
+    LIGHTING_COORDS(3, 4)
+    //^3 and 4 is referring to TEXCOORD3 and TEXCOORD4 respectively
 };
 
 sampler2D _MainTex;
@@ -35,6 +31,9 @@ Interpolators vert (MeshData v)
     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
     o.normal = UnityObjectToWorldNormal(v.normals);
     o.wPos = mul(unity_ObjectToWorld, v.vertex);
+
+    TRANSFER_VERTEX_TO_FRAGMENT(o);
+    
     return o;
 }
 
@@ -42,7 +41,7 @@ fixed4 frag (Interpolators i) : SV_Target
 {
     float3 N = normalize(i.normal);
 
-    float3 L = _WorldSpaceLightPos0.xyz;
+    float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
 
     float3 lambert = saturate(dot(N,L));
     float3 diffusionLight = lambert * _LightColor0.xyz;
