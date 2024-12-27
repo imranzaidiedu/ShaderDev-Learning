@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lighting
-  m_Shader: {fileID: 4800000, guid: 83108419558274387985bd1638accbcc, type: 3}
+  m_Name: MultiLighting
+  m_Shader: {fileID: 4800000, guid: c010871c4ed064c6c87c441a1c3f9b57, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
