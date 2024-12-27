@@ -42,16 +42,16 @@ fixed4 frag (Interpolators i) : SV_Target
     float3 N = normalize(i.normal);
 
     float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
-
+    float attenuation = LIGHT_ATTENUATION(i);
     float3 lambert = saturate(dot(N,L));
-    float3 diffusionLight = lambert * _LightColor0.xyz;
+    float3 diffusionLight = (lambert  * attenuation) * _LightColor0.xyz;
     float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
     float3 H = normalize(L + V);
                 
     float3 specularLight = saturate(dot(H, N)) * (lambert > 0);
 
     float specularExponent = exp2(_Gloss * 11) + 2;
-    specularLight = pow(specularLight, specularExponent);
+    specularLight = pow(specularLight, specularExponent) * _Gloss * attenuation;
     specularLight *= _LightColor0.xyz;
                 
     return float4(diffusionLight * _Color + specularLight, 1);
