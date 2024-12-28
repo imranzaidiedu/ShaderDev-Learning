@@ -6,6 +6,7 @@ struct MeshData
 {
     float4 vertex : POSITION;
     float3 normals : NORMAL;
+    float4 tangent : TANGENT;//xyz = tangent direction, w = tangent sign
     float2 uv : TEXCOORD0;
 };
 
@@ -15,12 +16,15 @@ struct Interpolators
     float3 normal : TEXCOORD1;
     float4 vertex : SV_POSITION;
     float3 wPos : TEXCOORD2;
-    LIGHTING_COORDS(3, 4)
-    //^3 and 4 is referring to TEXCOORD3 and TEXCOORD4 respectively
+    float3 tangent : TEXCOORD3;
+    float3 bitangent : TEXCOORD4;
+    LIGHTING_COORDS(5, 6)
+    //^5 and 6 is referring to TEXCOORD5 and TEXCOORD6 respectively
 };
 
 sampler2D _RockAlbedo;
 float4 _RockAlbedo_ST;
+sampler2D _RockNormals;
 float _Gloss;
 float4 _Color;
 
@@ -31,9 +35,11 @@ Interpolators vert (MeshData v)
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
     o.normal = UnityObjectToWorldNormal(v.normals);
     o.wPos = mul(unity_ObjectToWorld, v.vertex);
+    o.tangent = UnityObjectToWorldDir(v.tangent.xyz);
+    o.bitangent = cross(o.normal, o.tangent);
+    o.bitangent *= v.tangent.w * unity_WorldTransformParams.w; //correctly handle flipping/mirroring
 
     TRANSFER_VERTEX_TO_FRAGMENT(o);
-    
     return o;
 }
 
@@ -42,8 +48,16 @@ fixed4 frag (Interpolators i) : SV_Target
     float3 rock = tex2D(_RockAlbedo, i.uv);
 
     float3 surfaceColor = rock * _Color.rgb;
-    
-    float3 N = normalize(i.normal);
+    float3 tangentSpaceNormal = UnpackNormal(tex2D(_RockNormals, i.uv));
+
+    float3x3 mtxTangToWorld = {
+        i.tangent.x, i.bitangent.x, i.normal.x,
+        i.tangent.y, i.bitangent.y, i.normal.y,
+        i.tangent.z, i.bitangent.z, i.normal.z
+    };
+
+    float3 N = mul(mtxTangToWorld, tangentSpaceNormal);
+    //float3 N = normalize(i.normal);
 
     float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
     float attenuation = LIGHT_ATTENUATION(i);
