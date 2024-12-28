@@ -19,8 +19,8 @@ struct Interpolators
     //^3 and 4 is referring to TEXCOORD3 and TEXCOORD4 respectively
 };
 
-sampler2D _MainTex;
-float4 _MainTex_ST;
+sampler2D _RockAlbedo;
+float4 _RockAlbedo_ST;
 float _Gloss;
 float4 _Color;
 
@@ -28,7 +28,7 @@ Interpolators vert (MeshData v)
 {
     Interpolators o;
     o.vertex = UnityObjectToClipPos(v.vertex);
-    o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+    o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
     o.normal = UnityObjectToWorldNormal(v.normals);
     o.wPos = mul(unity_ObjectToWorld, v.vertex);
 
@@ -39,6 +39,10 @@ Interpolators vert (MeshData v)
 
 fixed4 frag (Interpolators i) : SV_Target
 {
+    float3 rock = tex2D(_RockAlbedo, i.uv);
+
+    float3 surfaceColor = rock * _Color.rgb;
+    
     float3 N = normalize(i.normal);
 
     float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
@@ -54,5 +58,5 @@ fixed4 frag (Interpolators i) : SV_Target
     specularLight = pow(specularLight, specularExponent) * _Gloss * attenuation;
     specularLight *= _LightColor0.xyz;
                 
-    return float4(diffusionLight * _Color + specularLight, 1);
+    return float4(diffusionLight * surfaceColor + specularLight, 1);
 }

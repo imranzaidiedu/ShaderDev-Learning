@@ -2,7 +2,7 @@ Shader "Unlit/MultiLighting"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _RockAlbedo ("RockAlbedo", 2D) = "white" {}
         _Gloss("Gloss", Range(0, 1)) = 1
         _Color("Color", Color) = (1,1,1,1)
     }
