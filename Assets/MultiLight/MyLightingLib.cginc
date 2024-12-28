@@ -27,6 +27,7 @@ float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
 float _Gloss;
 float4 _Color;
+float _NormalIntensity;
 
 Interpolators vert (MeshData v)
 {
@@ -49,6 +50,7 @@ fixed4 frag (Interpolators i) : SV_Target
 
     float3 surfaceColor = rock * _Color.rgb;
     float3 tangentSpaceNormal = UnpackNormal(tex2D(_RockNormals, i.uv));
+    tangentSpaceNormal = lerp(float3(0,0,1), tangentSpaceNormal, _NormalIntensity);
 
     float3x3 mtxTangToWorld = {
         i.tangent.x, i.bitangent.x, i.normal.x,
