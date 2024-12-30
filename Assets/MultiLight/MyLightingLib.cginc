@@ -25,15 +25,24 @@ struct Interpolators
 sampler2D _RockAlbedo;
 float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
+sampler2D _RockHeight;
 float _Gloss;
 float4 _Color;
 float _NormalIntensity;
+float _DisplacementStrength;
 
 Interpolators vert (MeshData v)
 {
     Interpolators o;
-    o.vertex = UnityObjectToClipPos(v.vertex);
+
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
+    
+    float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).x * 2 - 1;
+    
+    v.vertex.xyz += v.normals * (height * _DisplacementStrength);
+    
+    o.vertex = UnityObjectToClipPos(v.vertex);
+    
     o.normal = UnityObjectToWorldNormal(v.normals);
     o.wPos = mul(unity_ObjectToWorld, v.vertex);
     o.tangent = UnityObjectToWorldDir(v.tangent.xyz);
