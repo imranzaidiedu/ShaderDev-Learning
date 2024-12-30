@@ -7,6 +7,7 @@ Shader "Unlit/MultiLighting"
         [NoScaleOffset] _RockHeight ("Rock Height", 2D) = "gray" {}
         _Gloss("Gloss", Range(0, 1)) = 1
         _Color("Color", Color) = (1,1,1,1)
+        _AmbientLight("Ambient Light", Color) = (0,0,0,0)
         _NormalIntensity("Normal Intensity", Range(0, 1)) = 1
         _DisplacementStrength("Displacement Strength", Range(0, 0.2)) = 0
     }

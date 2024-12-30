@@ -28,6 +28,7 @@ sampler2D _RockNormals;
 sampler2D _RockHeight;
 float _Gloss;
 float4 _Color;
+float4 _AmbientLight;
 float _NormalIntensity;
 float _DisplacementStrength;
 
@@ -83,6 +84,9 @@ fixed4 frag (Interpolators i) : SV_Target
     float attenuation = LIGHT_ATTENUATION(i);
     float3 lambert = saturate(dot(N,L));
     float3 diffusionLight = (lambert  * attenuation) * _LightColor0.xyz;
+
+    diffusionLight += _AmbientLight;
+    
     float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
     float3 H = normalize(L + V);
                 
