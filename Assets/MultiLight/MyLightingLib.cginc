@@ -31,11 +31,20 @@ float4 _Color;
 float _NormalIntensity;
 float _DisplacementStrength;
 
+float2 Rotate(float2 v, float angleRad)
+{
+    float ca = cos(angleRad);
+    float sa = sin(angleRad);
+    return float2(ca * v.x - sa * v.y, sa * v.x + ca * v.y);
+}
+
 Interpolators vert (MeshData v)
 {
     Interpolators o;
 
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
+
+    o.uv = Rotate(o.uv - 0.5, _Time.y * 0.2) + 0.5;
     
     float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).x * 2 - 1;
     
