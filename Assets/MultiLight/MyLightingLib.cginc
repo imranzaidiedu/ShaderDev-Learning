@@ -44,7 +44,7 @@ Interpolators vert (MeshData v)
 
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
 
-    o.uv = Rotate(o.uv - 0.5, _Time.y * 0.2) + 0.5;
+    //o.uv = Rotate(o.uv - 0.5, _Time.y * 0.2) + 0.5;
     
     float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).x * 2 - 1;
     
