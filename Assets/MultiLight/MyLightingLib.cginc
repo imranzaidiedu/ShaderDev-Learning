@@ -29,10 +29,12 @@ float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
 sampler2D _RockHeight;
 sampler2D _DiffuseIBL;
+sampler2D _SpecularIBL;
 float _Gloss;
 float4 _Color;
 float4 _AmbientLight;
 float _NormalIntensity;
+float _SpecIBLIntensity;
 float _DisplacementStrength;
 
 float2 DirToRectilinear(float3 dir)
@@ -80,6 +82,8 @@ Interpolators vert (MeshData v)
 
 fixed4 frag (Interpolators i) : SV_Target
 {
+    float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
+
     float3 rock = tex2D(_RockAlbedo, i.uv);
 
     float3 surfaceColor = rock * _Color.rgb;
@@ -93,24 +97,30 @@ fixed4 frag (Interpolators i) : SV_Target
     };
 
     float3 N = mul(mtxTangToWorld, tangentSpaceNormal);
-    //float3 N = normalize(i.normal);
-
     float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
+    
+    float3 H = normalize(L + V);
+    
     float attenuation = LIGHT_ATTENUATION(i);
     float3 lambert = saturate(dot(N,L));
     float3 diffusionLight = (lambert  * attenuation) * _LightColor0.xyz;
 
     float3 diffuseIBL = tex2Dlod(_DiffuseIBL, float4(DirToRectilinear(N), 0, 0)).xyz;
+    
     diffusionLight += diffuseIBL;
     
-    float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
-    float3 H = normalize(L + V);
-                
     float3 specularLight = saturate(dot(H, N)) * (lambert > 0);
 
     float specularExponent = exp2(_Gloss * 11) + 2;
     specularLight = pow(specularLight, specularExponent) * _Gloss * attenuation;
     specularLight *= _LightColor0.xyz;
-                
+
+    float fresnel = pow(1-saturate(dot(V, N)), 5);
+    
+    float3 viewRefl = reflect(-V, N);
+    float mip = (1- _Gloss) * 6;
+    float3 specularIBL = tex2Dlod(_SpecularIBL, float4(DirToRectilinear(viewRefl), mip, mip)).xyz;
+    specularLight += specularIBL * _SpecIBLIntensity * fresnel;
+    
     return float4(diffusionLight * surfaceColor + specularLight, 1);
 }
