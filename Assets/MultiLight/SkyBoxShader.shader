@@ -63,7 +63,7 @@ Shader "Unlit/SkyBoxShader"
                 // sample the texture
                 //fixed4 col = tex2D(_MainTex, DirToRectilinear(i.viewDir));//this will create a seam in the scene
 
-                fixed4 col = tex2D(_MainTex, float4(DirToRectilinear(i.viewDir), 0, 0));
+                fixed4 col = tex2Dlod(_MainTex, float4(DirToRectilinear(i.viewDir), 0, 0));
                 
                 return col;
             }
