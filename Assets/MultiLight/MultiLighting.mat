@@ -43,6 +43,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DiffuseIBL:
+        m_Texture: {fileID: 2800000, guid: 55cfc6f1a3611724cbfac853b692a2c3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -67,6 +71,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 630ee25adc0214705aab0b2c64c525ea, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RockHeight:
+        m_Texture: {fileID: 2800000, guid: 352f7722ca3bd41a6879695d9cdd6334, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RockHeights:
         m_Texture: {fileID: 2800000, guid: 281405b79e29d4ebca5253b7c5fc7467, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -80,11 +88,13 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DisplacementStrength: 0.06
     - _DstBlend: 0
-    - _Gloss: 0.821
+    - _Gloss: 0.341
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HeightIntensity: 1
     - _Metallic: 0
     - _Mode: 0
     - _NormalIntensity: 1
@@ -96,6 +106,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - _AmbientLight: {r: 0.30691525, g: 0.49789608, b: 0.5377358, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

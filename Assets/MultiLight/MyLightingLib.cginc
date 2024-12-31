@@ -2,6 +2,8 @@
 #include "Lighting.cginc"
 #include "AutoLight.cginc"
 
+#define TAU 6.2831855
+
 struct MeshData
 {
     float4 vertex : POSITION;
@@ -26,11 +28,24 @@ sampler2D _RockAlbedo;
 float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
 sampler2D _RockHeight;
+sampler2D _DiffuseIBL;
 float _Gloss;
 float4 _Color;
 float4 _AmbientLight;
 float _NormalIntensity;
 float _DisplacementStrength;
+
+float2 DirToRectilinear(float3 dir)
+{
+    float x = atan2(dir.z, dir.x);
+    x = x / TAU;
+    x = x + 0.5;
+
+    float y = dir.y;
+    y = y * 0.5 + 0.5;
+
+    return float2(x, y);
+}
 
 float2 Rotate(float2 v, float angleRad)
 {
@@ -85,7 +100,8 @@ fixed4 frag (Interpolators i) : SV_Target
     float3 lambert = saturate(dot(N,L));
     float3 diffusionLight = (lambert  * attenuation) * _LightColor0.xyz;
 
-    diffusionLight += _AmbientLight;
+    float3 diffuseIBL = tex2Dlod(_DiffuseIBL, float4(DirToRectilinear(N), 0, 0)).xyz;
+    diffusionLight += diffuseIBL;
     
     float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
     float3 H = normalize(L + V);

@@ -5,6 +5,7 @@ Shader "Unlit/MultiLighting"
         _RockAlbedo ("Rock Albedo", 2D) = "white" {}
         [NoScaleOffset] _RockNormals ("Rock Normals", 2D) = "bump" {}
         [NoScaleOffset] _RockHeight ("Rock Height", 2D) = "gray" {}
+        _DiffuseIBL ("Diffuse IBL", 2D) = "black" {}
         _Gloss("Gloss", Range(0, 1)) = 1
         _Color("Color", Color) = (1,1,1,1)
         _AmbientLight("Ambient Light", Color) = (0,0,0,0)
